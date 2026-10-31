@@ -1,0 +1,25 @@
+[workspace]
+resolver = "2"
+members = ["gcal-core", "src-tauri"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+authors = ["Aleksey Beketov"]
+
+[workspace.dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+anyhow = "1"
+thiserror = "2"
+chrono = { version = "0.4", features = ["serde", "alloc"] }
+chrono-tz = { version = "0.10", features = ["serde"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+log = "0.4"
+rrule = "0.12"
+
+[profile.release]
+lto = true
+strip = true

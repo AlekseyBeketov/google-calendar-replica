@@ -1,0 +1,30 @@
+feature,area,priority,original,clone,notes
+Month view grid (6x7, day cells, today highlight),views,must,yes,yes,S01
+Week view (7 columns x 24h time grid, hour lines),views,must,yes,yes,S02
+Day view (single day x 24h),views,must,yes,yes,S03
+Agenda/schedule list (4-day grouped by date),views,should,yes,yes,S04
+Mini-calendar with busy-day dots + jump,views,should,yes,yes,S05
+Today / prev / next navigation,views,must,yes,yes,F04
+View switch (month/week/day/agenda),views,must,yes,yes,S01-S04
+Create timed event (title + start/end + save),events,must,yes,yes,F01,S07
+Create all-day event,events,must,yes,yes,F02
+Edit event (title/time/description/location),events,must,yes,yes,S06
+Delete event (this / this+following / series),events,must,yes,yes,F06
+Event CRUD persisted in SQLite,storage,must,yes,yes,core
+Timezone-aware timed events (IANA tz),events,must,yes,yes,chrono-tz
+DST handled (wall-clock preserved across DST),events,must,yes,yes,hard part
+Recurring events (RRULE: daily/weekly/monthly/yearly),events,must,yes,yes,F03
+Recurrence expansion + series edit/delete,events,must,yes,yes,hard part
+Event draggable in time grid (reschedule),events,could,yes,no,later
+Overlapping timed event layout,events,should,yes,yes,hard part
+All-day chip in month + all-day row in week,events,must,yes,yes,layout
+Task list: add / complete / remove, tasks,must,yes,yes,F07,S08
+Task due date + overdue highlight, tasks,should,yes,no,v2
+Multiple calendars with name + color, calendars,should,yes,yes,F09
+Toggle calendar visibility, calendars,should,yes,yes,F09
+Search events (fuzzy title/desc),search,could,yes,no,v2
+Reminders (local notification before event),reminders,could,yes,no,v2
+Google login / cloud sync,account,could,yes,no,skip - local only
+Google Meet integration,account,could,yes,no,skip
+Guest invite / RSVP / sharing,account,could,yes,no,skip
+External .ics feed subscription,account,could,yes,no,v2
