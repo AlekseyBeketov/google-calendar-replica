@@ -4,10 +4,11 @@ import { useStore, ymd } from '../store';
 const PALETTE = ['#d93025', '#e37400', '#f0ad00', '#0b8043', '#3f51b5', '#1a73e8', '#8e24aa', '#d81b60'];
 
 const MiniCalendar: React.FC = () => {
-  const { cursor, setCursor } = useStore();
+  const { cursor, setCursor, events } = useStore();
   const now = new Date();
   const todayKey = ymd(now);
   const cursorKey = ymd(cursor);
+  const busy = new Set(events.map((e) => e.occurrence_date));
 
   const first = new Date(cursor.getFullYear(), cursor.getMonth(), 1);
   const shift = (first.getDay() + 6) % 7;
@@ -43,6 +44,9 @@ const MiniCalendar: React.FC = () => {
               }}
             >
               {d.getDate()}
+              {busy.has(key) && !isToday && (
+                <span style={{ display: 'block', width: 4, height: 4, borderRadius: '50%', background: '#1a73e8', margin: '1px auto 0' }} />
+              )}
             </div>
           );
         })}

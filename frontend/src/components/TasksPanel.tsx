@@ -4,11 +4,13 @@ import { useStore } from '../store';
 export const TasksPanel: React.FC = () => {
   const { tasks, createTask, setTaskCompleted, deleteTask } = useStore();
   const [title, setTitle] = useState('');
+  const [due, setDue] = useState('');
 
   const submit = async () => {
     if (!title.trim()) return;
-    await createTask({ title: title.trim() });
+    await createTask({ title: title.trim(), due_date: due || undefined });
     setTitle('');
+    setDue('');
   };
 
   const active = tasks.filter((t) => t.status === 'needs_action');
@@ -51,7 +53,14 @@ export const TasksPanel: React.FC = () => {
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => { if (e.key === 'Enter') void submit(); }}
         placeholder="Add a task…"
-        style={{ width: '100%', padding: '4px 6px', fontSize: 13, marginBottom: 6 }}
+        style={{ width: '100%', padding: '4px 6px', fontSize: 13, marginBottom: 4 }}
+      />
+      <input
+        type="date"
+        value={due}
+        onChange={(e) => setDue(e.target.value)}
+        title="Due date (optional)"
+        style={{ width: '100%', fontSize: 12, marginBottom: 6, color: due ? '#3c4043' : '#70757a' }}
       />
       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
         {active.map(row)}
