@@ -1,59 +1,64 @@
 import React, { useState } from 'react';
 import { useStore } from '../store';
-import type { Task, TaskInput } from '../types';
-import { invoke } from '@tauri-apps/api/core';
 
 export const TasksPanel: React.FC = () => {
-  const { tasks, init } = useStore();
+  const { tasks, createTask, setTaskCompleted, deleteTask } = useStore();
   const [title, setTitle] = useState('');
 
-  const addTask = async () => {
+  const submit = async () => {
     if (!title.trim()) return;
-    const input: TaskInput = { title: title.trim() };
-    await invoke('create_task', { input });
+    await createTask({ title: title.trim() });
     setTitle('');
-    init();
   };
 
-  const toggleTask = async (task: Task) => {
-    const completed = task.status === 'needs_action';
-    await invoke('set_task_completed', { id: task.id, completed });
-    init();
-  };
+  const active = tasks.filter((t) => t.status === 'needs_action');
+  const completed = tasks.filter((t) => t.status === 'completed');
 
-  const deleteTask = async (task: Task) => {
-    await invoke('delete_task', { id: task.id });
-    init();
-  };
+  const row = (t: (typeof tasks)[number]) => (
+    <li key={t.id} style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '3px 0' }}>
+      <input
+        type="checkbox"
+        checked={t.status === 'completed'}
+        onChange={() => void setTaskCompleted(t.id, t.status === 'needs_action')}
+      />
+      <span style={{
+        fontSize: 13, flex: 1,
+        textDecoration: t.status === 'completed' ? 'line-through' : 'none',
+        color: t.overdue ? '#d93025' : '#3c4043',
+      }}>
+        {t.title}
+        {t.due_date && (
+          <span style={{ fontSize: 11, color: t.overdue ? '#d93025' : '#70757a', marginLeft: 4 }}>
+            {t.due_date}
+          </span>
+        )}
+      </span>
+      <button
+        onClick={() => void deleteTask(t.id)}
+        title="Delete"
+        style={{ border: 'none', background: 'none', cursor: 'pointer', color: '#70757a' }}
+      >
+        ×
+      </button>
+    </li>
+  );
 
   return (
-    <aside style={{ width: '220px', borderLeft: '1px solid #ddd', padding: '0.5rem' }}>
-      <h3>Tasks</h3>
+    <aside style={{ width: 230, borderLeft: '1px solid #dadce0', padding: 8, flexShrink: 0 }}>
+      <h3 style={{ fontSize: 14, color: '#3c4043', margin: '0 0 6px' }}>My Tasks</h3>
       <input
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onKeyDown={(e) => { if (e.key === 'Enter') addTask(); }}
+        onKeyDown={(e) => { if (e.key === 'Enter') void submit(); }}
         placeholder="Add a task…"
-        style={{ width: '100%', marginBottom: '0.5rem' }}
+        style={{ width: '100%', padding: '4px 6px', fontSize: 13, marginBottom: 6 }}
       />
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {tasks.map((t) => (
-          <li key={t.id} style={{ display: 'flex', alignItems: 'center', marginBottom: '4px' }}>
-            <input
-              type="checkbox"
-              checked={t.status === 'completed'}
-              onChange={() => toggleTask(t)}
-              style={{ marginRight: '0.5rem' }}
-            />
-            <span style={{
-              textDecoration: t.status === 'completed' ? 'line-through' : 'none',
-              color: t.overdue ? '#d93025' : 'inherit',
-              flex: 1,
-            }}>{t.title}</span>
-            <button onClick={() => deleteTask(t)} title="Delete">×</button>
-          </li>
-        ))}
+      <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+        {active.map(row)}
+        {completed.length > 0 && active.length > 0 && <hr style={{ border: 'none', borderTop: '1px solid #e8eaed' }} />}
+        {completed.map(row)}
       </ul>
+      {!tasks.length && <div style={{ fontSize: 12, color: '#70757a' }}>No tasks yet</div>}
     </aside>
   );
 };

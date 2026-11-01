@@ -109,6 +109,12 @@ export interface TaskPatch {
   due_date?: string;
 }
 
+export interface EventDetail {
+  event: Event;
+  series_id?: string;
+  is_series: boolean;
+}
+
 export interface CompleteInput {
   completed: boolean;
 }
