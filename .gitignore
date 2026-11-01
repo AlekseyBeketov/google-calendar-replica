@@ -6,4 +6,5 @@ dist/
 *.db-wal
 *.db-shm
 graphify-out/
+.tgrep/
 .replit

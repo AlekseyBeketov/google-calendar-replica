@@ -14,4 +14,13 @@ pub mod db;
 pub mod error;
 pub mod time;
 
+pub mod models;
+pub mod calendars;
+pub mod events;
+pub mod recurrence;
+pub mod tasks;
+pub mod store;
+
 pub use error::{Error, Result};
+pub use models::*;
+pub use store::AppStore;

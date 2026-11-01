@@ -2,7 +2,7 @@
 //! gcal-core never opens the app DB path itself — callers pass the path or a
 //! shared connection in (tests use tempdirs).
 
-use crate::error::{Error, Result};
+use crate::error::Result;
 use rusqlite::Connection;
 use std::path::Path;
 
